@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@import "tw-animate-css"; 
+
+ @custom-variant dark (&:is(.dark *)); 
+
+
+ html {
+  scrollbar-gutter: stable;
+}
+
+
+ 
+ /* Prevent layout shift when Radix removes scrollbar */
+/* html[data-scroll-locked] {
+  padding-right: var(--removed-body-scroll-bar-size, 0px) !important;
+}
+
+body[data-scroll-locked] {
+  overflow: hidden !important;
+} */
