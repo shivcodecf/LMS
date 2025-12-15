@@ -77,6 +77,13 @@ export const login = async (req, res) => {
       });
     }
 
+   if (role != user.role) {
+    return res.status(403).json({ // Use 403 Forbidden for Authorization failures
+        success: false,
+        message: "Access denied. You do not have the necessary permissions for this action.",
+    });
+}
+
     generateToken(res, user, `welocome back ${user.name}`);
     
   } catch (error) {

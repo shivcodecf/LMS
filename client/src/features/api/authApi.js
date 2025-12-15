@@ -2,7 +2,10 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { userLoggedIn, userLoggedOut } from "../authSlice";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const USER_API = "http://localhost:8080/api/v1/user/";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+const USER_API = `${API_BASE_URL}user/`;
 
 // the actual API integeration works here
 
