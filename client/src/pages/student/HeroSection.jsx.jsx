@@ -4,59 +4,72 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
-
-  const[searchQuery,setSearchQuery] = useState("");
-     
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-
-  const searchHandler = (e) =>{
-
-   e.preventDefault();
-
-   if(searchQuery.trim()!=="")
-   {
-     navigate(`/course/search?query=${searchQuery}`)
-
-   }
-
-   setSearchQuery("")
-
-
-
-
-  }
-
+  const searchHandler = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim() !== "") {
+      navigate(`/course/search?query=${searchQuery}`);
+    }
+    setSearchQuery("");
+  };
 
   return (
-    <div className="relative  bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-700 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-28 px-6 text-center">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-white text-5xl font-extrabold leading-tight mb-5">
-          Discover the Best Courses for Your Future
+    <div className="relative min-h-[90vh] flex items-center justify-center px-4 overflow-hidden bg-gradient-to-br from-black via-gray-900 to-indigo-900">
+
+      {/* 🔥 Background glow */}
+      <div className="absolute w-[500px] h-[500px] bg-purple-500 opacity-30 blur-[120px] rounded-full top-[-100px] left-[-100px]" />
+      <div className="absolute w-[400px] h-[400px] bg-blue-500 opacity-30 blur-[100px] rounded-full bottom-[-100px] right-[-100px]" />
+
+      {/* 💎 Content */}
+      <div className="relative z-10 max-w-4xl w-full text-center">
+
+        {/* Heading */}
+        <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
+          Learn Smarter, <span className="text-blue-400">Grow Faster 🚀</span>
         </h1>
-        <p className="text-gray-200 dark:text-gray-400 text-lg mb-12">
-          Upskill, Learn, and Grow with top-rated online courses tailored for you.
+
+        {/* Subtext */}
+        <p className="text-gray-300 text-lg md:text-xl mb-10">
+          Find top-rated courses and upgrade your skills with the best learning experience.
         </p>
+
+        {/* 🔍 Search Box */}
+        <form
+          onSubmit={searchHandler}
+          className="flex flex-col md:flex-row items-center gap-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-3 shadow-xl"
+        >
+          <Input
+            type="text"
+            placeholder="Search courses like 'React', 'Backend'..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="flex-1 bg-transparent border-none text-white placeholder-gray-400 focus-visible:ring-0 px-4 py-3"
+          />
+
+          <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition">
+            Search
+          </Button>
+        </form>
+
+        {/* 🎯 Action Buttons */}
+        <div className="flex flex-col md:flex-row justify-center gap-4 mt-8">
+          <Button
+            onClick={() => navigate(`/course/search?query=${searchQuery}`)}
+            className="bg-white text-black font-semibold px-6 py-3 rounded-xl hover:bg-gray-200 transition"
+          >
+            Explore Courses
+          </Button>
+
+          <Button
+            variant="outline"
+            className="border-white text-white px-6 py-3 rounded-xl hover:bg-white hover:text-black transition"
+          >
+            View Trending 🔥
+          </Button>
+        </div>
       </div>
-      <form
-        action=""
-        onSubmit = {searchHandler}
-        className="flex items-center bg-white/20 dark:bg-gray-700/50 backdrop-blur-sm rounded-full shadow-lg overflow-hidden max-w-2xl mx-auto mb-8 p-1"
-      >
-        <Input
-          type="text"
-          placeholder="Search for courses..."
-          value={searchQuery}
-          onChange = {(e)=>setSearchQuery(e.target.value)}
-          className="flex-grow border-none bg-transparent focus-visible:ring-0 px-6 py-3 text-white placeholder-white/70 dark:placeholder-gray-300 rounded-full"
-        />
-        <Button className="bg-blue-600 text-white dark:bg-blue-700 px-8 py-3 rounded-full hover:bg-blue-800 transition-all duration-300">
-          Search
-        </Button>
-      </form>
-      <Button type="submit" onClick={()=>navigate(`course/search?query`) } className="bg-white dark:bg-gray-800 text-blue-700 dark:text-white font-semibold px-8 py-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300">
-        Explore Courses
-      </Button>
     </div>
   );
 };
