@@ -65,12 +65,9 @@ const CourseProgress = () => {
   };
   // Handle select a specific lecture to watch
   const handleSelectLecture = (lecture) => {
-
     setCurrentLecture(lecture);
     handleLectureProgress(lecture._id);
-
   };
-
 
   const handleCompleteCourse = async () => {
     await completeCourse(courseId);
@@ -90,7 +87,8 @@ const CourseProgress = () => {
         >
           {completed ? (
             <div className="flex items-center">
-              <CheckCircle className="h-4 w-4 mr-2" /> <span>Completed</span>{" "}
+              <CheckCircle className="h-4 w-4 mr-2" />{" "}
+              <span>Completed</span>{" "}
             </div>
           ) : (
             "Mark as completed"
@@ -105,7 +103,7 @@ const CourseProgress = () => {
             <video
               src={currentLecture?.videoUrl || initialLecture?.videoUrl}
               controls
-                poster="https://via.placeholder.com/640x360.png?text=Video+Placeholder"
+              poster="https://via.placeholder.com/640x360.png?text=Video+Placeholder"
               className="w-[500px] h-[500px] md:rounded-lg"
               onPlay={() =>
                 handleLectureProgress(currentLecture?._id || initialLecture._id)
@@ -118,7 +116,7 @@ const CourseProgress = () => {
               {`Lecture ${
                 courseDetails.lectures.findIndex(
                   (lec) =>
-                    lec._id === (currentLecture?._id || initialLecture._id)
+                    lec._id === (currentLecture?._id || initialLecture._id),
                 ) + 1
               } : ${
                 currentLecture?.lectureTitle || initialLecture?.lectureTitle

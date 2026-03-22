@@ -28,7 +28,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-
+import EditCourse from "./EditCourse.jsx";
 const CourseTab = () => {
   const navigate = useNavigate();
 
@@ -146,7 +146,8 @@ const CourseTab = () => {
     return <Loader2 className="h-4 w-4 animate-spin" />;
 
   return (
-    <div className="mt-[20px]">
+    <div className=""> 
+     {/* <EditCourse/> */}
       <Card>
         <CardHeader className="flex flex-row justify-between">
           <div>

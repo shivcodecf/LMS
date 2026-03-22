@@ -14,13 +14,13 @@ export const appStore = configureStore({
       authApi.middleware,
       courseApi.middleware,
       purchaseApi.middleware,
-      courseProgressApi.middleware
+      courseProgressApi.middleware,
     ),
 });
 
 const initializeApp = async () => {
   await appStore.dispatch(
-    authApi.endpoints.loadUser.initiate({}, { forceRefetch: true })
+    authApi.endpoints.loadUser.initiate({}, { forceRefetch: true }),
   );
 };
 initializeApp();

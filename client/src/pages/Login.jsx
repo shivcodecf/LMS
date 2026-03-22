@@ -12,27 +12,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useRegisterUserMutation, useLoginUserMutation} from "@/features/api/authApi";
+import {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+} from "@/features/api/authApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-
 const Login = () => {
-
   const navigate = useNavigate();
 
   const [signupInput, setSignupInput] = useState({
-  name: "",
-  email: "",
-  password: "",
-  role: "student", // default role
-});
-
+    name: "",
+    email: "",
+    password: "",
+    role: "student", // default role
+  });
 
   const [loginInput, setLoginInput] = useState({
     email: "",
     password: "",
-    role:"",
+    role: "",
   });
 
   const [
@@ -56,7 +56,6 @@ const Login = () => {
   ] = useLoginUserMutation();
 
   const eventClickHandler = (e, type) => {
-
     const { name, value } = e.target;
 
     if (type == "login") {
@@ -64,63 +63,52 @@ const Login = () => {
     } else {
       setSignupInput({ ...signupInput, [name]: value });
     }
-
   };
 
   const handleregistration = async (type) => {
-    
     const data = type === "login" ? loginInput : signupInput;
     console.log(data);
     const action = type === "signup" ? registerUser : loginUser;
 
-    await action(data);  // we send this data to authApi.js
-
+    await action(data); // we send this data to authApi.js
   };
 
   useEffect(() => {
+    if (registerIsSuccess || registerData) {
+      console.log("Success Register:", registerData);
+      toast.success(registerData.message || "Registered Successfully");
+    }
 
-  if (registerIsSuccess || registerData) {
-    console.log("Success Register:", registerData);
-    toast.success(registerData.message || "Registered Successfully");
-  }
+    if (registerError) {
+      toast.error(registerError?.data?.message || "Registration Failed");
+    }
 
-  if (registerError) {
-    toast.error(registerError?.data?.message || "Registration Failed");
-  }
+    if (loginIsSuccess || loginData) {
+      console.log("Success Login:", loginData);
 
-  if (loginIsSuccess || loginData) {
-    console.log("Success Login:", loginData);
+      toast.success(loginData.message || "Login Successful");
 
-    toast.success(loginData.message || "Login Successful");
+      navigate("/");
+    }
 
-    navigate("/")
-  }
-
-  if (loginError) {
-    toast.error(loginError?.data?.message || "Login Failed");
-  }
-
-}, [
-  loginIsSuccess,
-  registerIsSuccess,
-  loginData,
-  registerData,
-  loginError,
-  registerError,
-]);
-
-
-
-
+    if (loginError) {
+      toast.error(loginError?.data?.message || "Login Failed");
+    }
+  }, [
+    loginIsSuccess,
+    registerIsSuccess,
+    loginData,
+    registerData,
+    loginError,
+    registerError,
+  ]);
 
   return (
     <div className="flex items-center justify-center mt-20 dark:text-white">
       <Tabs defaultValue="login" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="signup" >
-            Signup
-          </TabsTrigger>
-          <TabsTrigger value="login" >Login</TabsTrigger>
+          <TabsTrigger value="signup">Signup</TabsTrigger>
+          <TabsTrigger value="login">Login</TabsTrigger>
         </TabsList>
         <TabsContent value="signup">
           <Card>
@@ -161,36 +149,33 @@ const Login = () => {
                   placeholder=""
                   required
                 />
-              </div>  
+              </div>
 
               <div className="space-y-1">
-  <Label>Role</Label>
-  <div className="flex gap-4">
-    <label className="flex items-center gap-1">
-      <input
-        type="radio"
-        name="role"
-        value="student"
-        checked={signupInput.role === "student"}
-        onChange={(e) => eventClickHandler(e, "signup")}
-      />
-      Student
-    </label>
-    <label className="flex items-center gap-1">
-      <input
-        type="radio"
-        name="role"
-        value="instructor"
-        checked={signupInput.role === "instructor"}
-        onChange={(e) => eventClickHandler(e, "signup")}
-      />
-      Instructor
-    </label>
-  </div>
-</div>
-
-
-
+                <Label>Role</Label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="student"
+                      checked={signupInput.role === "student"}
+                      onChange={(e) => eventClickHandler(e, "signup")}
+                    />
+                    Student
+                  </label>
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="instructor"
+                      checked={signupInput.role === "instructor"}
+                      onChange={(e) => eventClickHandler(e, "signup")}
+                    />
+                    Instructor
+                  </label>
+                </div>
+              </div>
             </CardContent>
             <CardFooter>
               <Button
@@ -237,34 +222,33 @@ const Login = () => {
                   value={loginInput.password}
                   required
                 />
-              </div> 
+              </div>
 
               <div className="space-y-1">
-  <Label>Role</Label>
-  <div className="flex gap-4">
-    <label className="flex items-center gap-1">
-      <input
-        type="radio"
-        name="role"
-        value="student"
-        checked={loginInput.role === "student"}
-        onChange={(e) => eventClickHandler(e, "login")}
-      />
-      Student
-    </label>
-    <label className="flex items-center gap-1">
-      <input
-        type="radio"
-        name="role"
-        value="instructor"
-        checked={loginInput.role === "instructor"}
-        onChange={(e) => eventClickHandler(e, "login")}
-      />
-      Instructor
-    </label>
-  </div>
-</div>
-
+                <Label>Role</Label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="student"
+                      checked={loginInput.role === "student"}
+                      onChange={(e) => eventClickHandler(e, "login")}
+                    />
+                    Student
+                  </label>
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="instructor"
+                      checked={loginInput.role === "instructor"}
+                      onChange={(e) => eventClickHandler(e, "login")}
+                    />
+                    Instructor
+                  </label>
+                </div>
+              </div>
             </CardContent>
             <CardFooter>
               <Button

@@ -28,6 +28,7 @@ import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 
 /* ------------------------ Animated Hamburger ------------------------ */
+
 const AnimatedHamburger = ({ isOpen, onClick }) => {
   return (
     <button

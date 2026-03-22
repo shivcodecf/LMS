@@ -5,9 +5,13 @@ import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+
 const USER_API = `${API_BASE_URL}user/`;
 
+
 // the actual API integeration works here
+// RTK QUERY
+
 
 export const authApi = createApi({
   reducerPath: "authApi",

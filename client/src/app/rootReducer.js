@@ -10,7 +10,6 @@ const rootReducer = combineReducers({
   [courseApi.reducerPath]: courseApi.reducer,
   [purchaseApi.reducerPath]: purchaseApi.reducer,
   [courseProgressApi.reducerPath]: courseProgressApi.reducer,
-  
 
   auth: authReducer,
 });
