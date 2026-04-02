@@ -64,7 +64,7 @@ export const updateLectureProgress = async (req, res) => {
 
     // find the lecture progress in the course progress
     const lectureIndex = courseProgress.lectureProgress.findIndex(
-      (lecture) => lecture.lectureId === lectureId
+      (lecture) => lecture.lectureId === lectureId,
     );
 
     if (lectureIndex !== -1) {
@@ -80,7 +80,7 @@ export const updateLectureProgress = async (req, res) => {
 
     // if all lecture is complete
     const lectureProgressLength = courseProgress.lectureProgress.filter(
-      (lectureProg) => lectureProg.viewed
+      (lectureProg) => lectureProg.viewed,
     ).length;
 
     const course = await Course.findById(courseId);
@@ -98,7 +98,6 @@ export const updateLectureProgress = async (req, res) => {
   }
 };
 
-
 export const markAsCompleted = async (req, res) => {
   try {
     const { courseId } = req.params;
@@ -109,7 +108,7 @@ export const markAsCompleted = async (req, res) => {
       return res.status(404).json({ message: "Course progress not found" });
 
     courseProgress.lectureProgress.map(
-      (lectureProgress) => (lectureProgress.viewed = true)
+      (lectureProgress) => (lectureProgress.viewed = true),
     );
     courseProgress.completed = true;
     await courseProgress.save();
@@ -118,8 +117,6 @@ export const markAsCompleted = async (req, res) => {
     console.log(error);
   }
 };
-
-
 
 export const markAsInCompleted = async (req, res) => {
   try {
@@ -131,7 +128,7 @@ export const markAsInCompleted = async (req, res) => {
       return res.status(404).json({ message: "Course progress not found" });
 
     courseProgress.lectureProgress.map(
-      (lectureProgress) => (lectureProgress.viewed = false)
+      (lectureProgress) => (lectureProgress.viewed = false),
     );
     courseProgress.completed = false;
     await courseProgress.save();

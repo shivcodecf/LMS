@@ -6,12 +6,18 @@ import { Lecture } from "../models/lecture.model.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// ("When a user clicks buy, the frontend calls the backend to create a Stripe checkout session. The backend creates a pending purchase and sends session details including metadata like userId and courseId to Stripe. Stripe returns a checkout URL, which the frontend uses to redirect the user to Stripe’s payment page. After successful payment, Stripe sends a webhook event to our backend. We verify the event, update the purchase status to completed, and grant access to the course by updating user and course records. This ensures secure and reliable payment handling.");
+
+// this controllers calls the stripe to open the stripe sessions to enter users details
+
+
 export const createCheckoutSession = async (req, res) => {
   try {
     const userId = req.id;
     const { courseId } = req.body;
 
     const course = await Course.findById(courseId);
+
     if (!course) return res.status(404).json({ message: "Course not found!" });
 
     const newPurchase = new CoursePurchase({
@@ -20,6 +26,11 @@ export const createCheckoutSession = async (req, res) => {
       amount: course.coursePrice,
       status: "pending",
     });
+
+    // here the main stripe is invoked in frontend (backend calls stripe for sessions)
+    // here we verify with stripe official documentation
+
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -37,8 +48,9 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `http://localhost:5173/course-progress/${courseId}`,
-      cancel_url: `http://localhost:5173/course-detail/${courseId}`,
+      success_url: `${apiUrl}/course-progress/${courseId}`,
+      cancel_url: `${apiUrl}/course-detail/${courseId}`,
+      //"Metadata in Stripe is used to attach custom information like userId and courseId so we can identify and process the payment correctly in the webhook."
       metadata: {
         courseId,
         userId,
@@ -55,7 +67,11 @@ export const createCheckoutSession = async (req, res) => {
       });
     }
 
+    // store paymentId , so we can match sessions after successful payment
+    //You can match payment → user → course
+
     newPurchase.paymentId = session.id;
+
     await newPurchase.save();
 
     return res.status(200).json({
@@ -68,15 +84,28 @@ export const createCheckoutSession = async (req, res) => {
   }
 };
 
+//
+
+// This controller listens to Stripe events and confirms payment after it actually succeeds.
+//Webhook is an automatic HTTP callback triggered by an event.
+
+
+
 export const stripeWebhook = async (req, res) => {
   const endpointSecret = process.env.WEBHOOK_ENDPOINT_SECRET;
   let event;
 
   try {
     const sig = req.headers["stripe-signature"];
+    //It verifies that the webhook request actually came from Stripe and is not fake.
+    // “Was this request really signed by Stripe?”
     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+
   } catch (error) {
-    console.error("❌ Stripe webhook signature verification failed:", error.message);
+    console.error(
+      "❌ Stripe webhook signature verification failed:",
+      error.message,
+    );
     return res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
@@ -86,7 +115,9 @@ export const stripeWebhook = async (req, res) => {
     const session = event.data.object;
 
     try {
-      const purchase = await CoursePurchase.findOne({ paymentId: session.id }).populate("courseId");
+      const purchase = await CoursePurchase.findOne({
+        paymentId: session.id,
+      }).populate("courseId");
 
       if (!purchase) {
         console.warn("⚠️ No matching purchase for session ID:", session.id);
@@ -104,7 +135,7 @@ export const stripeWebhook = async (req, res) => {
       if (purchase.courseId?.lectures?.length > 0) {
         await Lecture.updateMany(
           { _id: { $in: purchase.courseId.lectures } },
-          { $set: { isPreviewFree: true } }
+          { $set: { isPreviewFree: true } },
         );
       }
 
@@ -112,14 +143,14 @@ export const stripeWebhook = async (req, res) => {
       await User.findByIdAndUpdate(
         purchase.userId,
         { $addToSet: { enrolledCourses: purchase.courseId._id } },
-        { new: true }
+        { new: true },
       );
 
       // Add user to course's student list
       await Course.findByIdAndUpdate(
         purchase.courseId._id,
         { $addToSet: { enrolledStudents: purchase.userId } },
-        { new: true }
+        { new: true },
       );
 
       console.log("✅ Purchase completed and user/course updated");
@@ -131,6 +162,8 @@ export const stripeWebhook = async (req, res) => {
 
   res.status(200).send();
 };
+
+
 
 export const getCourseDetailWithPurchaseStatus = async (req, res) => {
   try {
@@ -161,9 +194,15 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
   }
 };
 
+
+
+
+
 export const getAllPurchasedCourse = async (_, res) => {
   try {
-    const purchasedCourses = await CoursePurchase.find({ status: "completed" }).populate("courseId");
+    const purchasedCourses = await CoursePurchase.find({
+      status: "completed",
+    }).populate("courseId");
 
     return res.status(200).json({
       purchasedCourse: purchasedCourses || [],

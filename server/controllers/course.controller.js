@@ -33,55 +33,43 @@ export const createCourse = async (req, res) => {
   }
 };
 
-export const searchCourse = async(req, res) => {
+
+
+export const searchCourse = async (req, res) => {
   try {
     const { query = "", categories = [], sortByPrice = "" } = req.query;
 
     const searchCriteria = {
       isPublished: true,
-      $or: [{ courseTitle: { $regex: query, $options: "i" } },
-        { subTitle: { $regex: query, $options: "i" }},
-        { category: { $regex: query, $options: "i" } }
-        ]
-      
+      $or: [
+        { courseTitle: { $regex: query, $options: "i" } },
+        { subTitle: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+      ],
     };
 
-    
-    
-    if(categories.length>0)
-    {                                                                       
-
-
-      searchCriteria.category = {$in : categories}
-      
+    if (categories.length > 0) {
+      searchCriteria.category = { $in: categories };
     }
 
+    const sortOptions = {};
 
-   
+    if (sortByPrice === "low") {
+      sortOptions.coursePrice = 1;
+    }
 
-   const sortOptions = {};
+    if (sortByPrice == "high") {
+      sortOptions.coursePrice = -1;
+    }
 
-   if(sortByPrice === "low")
-   {
-    sortOptions.coursePrice = 1;
-   }
+    const courses = await Course.find(searchCriteria)
+      .populate({ path: "creator", select: "name photoUrl" })
+      .sort(sortOptions);
 
-   if(sortByPrice == "high")
-   {
-    sortOptions.coursePrice = -1
-   }
-
-   const courses = await Course.find(searchCriteria).populate({path:"creator",select:"name photoUrl"}).sort(sortOptions);
-
-   return res.status(200).json({
-     courses:courses || [],
-     success:true
-   })
-
-
-
-
-
+    return res.status(200).json({
+      courses: courses || [],
+      success: true,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -249,7 +237,6 @@ export const getCourseLecture = async (req, res) => {
 };
 
 export const editLecture = async (req, res) => {
-
   try {
     const { lectureTitle, videoInfo, isPreviewFree } = req.body;
 
@@ -285,7 +272,6 @@ export const editLecture = async (req, res) => {
       message: "Failed to edit lectures",
     });
   }
-  
 };
 
 export const removeLecture = async (req, res) => {
@@ -306,7 +292,7 @@ export const removeLecture = async (req, res) => {
 
     await Course.updateOne(
       { lectures: lectureId }, // find the course that contains the lecture
-      { $pull: { lectures: lectureId } } // remove the lectureId from the lectures array (inside course Array)
+      { $pull: { lectures: lectureId } }, // remove the lectureId from the lectures array (inside course Array)
     );
 
     return res.status(200).json({

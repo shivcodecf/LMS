@@ -48,6 +48,9 @@ export const register = async (req, res) => {
   }
 };
 
+
+
+
 export const login = async (req, res) => {
   try {
     const { email, password, role } = req.body;
@@ -96,6 +99,9 @@ export const login = async (req, res) => {
   }
 };
 
+
+
+
 export const logout = async (_, res) => {
   try {
     return res.status(200).cookie("token", "", { maxAge: 0 }).json({
@@ -111,6 +117,10 @@ export const logout = async (_, res) => {
     });
   }
 };
+
+
+
+
 
 export const getUserProfile = async (req, res) => {
   try {
@@ -138,6 +148,9 @@ export const getUserProfile = async (req, res) => {
     });
   }
 };
+
+
+
 
 export const updateProfile = async (req, res) => {
   try {
@@ -170,6 +183,8 @@ export const updateProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
       new: true,
     }).select("-password");
+
+
 
     return res.status(200).json({
       success: true,

@@ -19,7 +19,7 @@ const lectureSchema = new mongoose.Schema(
       type: Boolean,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Lecture = mongoose.model("Lecture", lectureSchema);
