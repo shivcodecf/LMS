@@ -10,6 +10,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // this controllers calls the stripe to open the stripe sessions to enter users details
 
+const apiUrl = process.env.FRONTEND_URL;
+
 
 export const createCheckoutSession = async (req, res) => {
   try {
@@ -30,7 +32,7 @@ export const createCheckoutSession = async (req, res) => {
     // here the main stripe is invoked in frontend (backend calls stripe for sessions)
     // here we verify with stripe official documentation
 
-    const apiUrl = import.meta.env.VITE_API_URL;
+    
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
