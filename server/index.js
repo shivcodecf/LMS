@@ -11,6 +11,7 @@ import courseProgressRoute from "./routes/courseProgress.route.js";
 
 // 👇 Import Stripe webhook controller directly
 import { stripeWebhook } from "./controllers/coursePurchase.controller.js";
+import redisClient from "./utils/redis.js";
 
 dotenv.config();
 
@@ -54,6 +55,22 @@ app.get("/home", (_, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server starts at port ${PORT}`);
-});
+
+
+
+Promise.all([
+  connectDB(),
+  redisClient.connect()
+])
+  .then(() => {
+    console.log("✅ MongoDB Connected");
+    console.log("✅ Redis Connected");
+
+    app.listen(PORT, () => {
+      console.log(`✅ Server running at port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Startup failed:", err);
+    process.exit(1);
+  });

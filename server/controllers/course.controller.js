@@ -5,6 +5,7 @@ import {
   uploadMedia,
 } from "../utils/cloudinary.js";
 import { Lecture } from "../models/lecture.model.js";
+import redisClient from "../utils/redis.js";
 
 export const createCourse = async (req, res) => {
   try {
@@ -32,8 +33,6 @@ export const createCourse = async (req, res) => {
     });
   }
 };
-
-
 
 export const searchCourse = async (req, res) => {
   try {
@@ -346,6 +345,10 @@ export const togglePublishCourse = async (req, res) => {
 
     await course.save();
 
+    const courseKey = "course:published";
+
+    await redisClient.del(courseKey);
+
     const publishedMessage = course.isPublished ? "Published" : "unPublished";
 
     return res.status(200).json({
@@ -360,23 +363,38 @@ export const togglePublishCourse = async (req, res) => {
 
 export const getPublishedCourse = async (_, res) => {
   try {
-    const course = await Course.find({ isPublished: true }).populate({
+    const courseKey = "course:published";
+
+    const courseCache = await redisClient.get(courseKey);
+
+    if (courseCache) {
+      console.log("🔥 Cache Hit");
+
+      return res.status(200).json({
+        course: JSON.parse(courseCache),
+        message: "data from redis",
+      });
+    }
+
+    console.log("❌ Cache Miss");
+
+    const course = await Course.find({
+      isPublished: true,
+    }).populate({
       path: "creator",
       select: "name photoUrl",
     });
 
-    if (!course) {
-      return res.status(404).json({
-        message: "Course Not found",
-      });
-    }
+    await redisClient.set(courseKey, JSON.stringify(course), {
+      EX: 3600, // 60 minutes
+    });
 
     return res.status(200).json({
       course,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Failed to find course",
+      message: error.message,
     });
   }
 };

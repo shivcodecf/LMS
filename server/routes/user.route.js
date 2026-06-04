@@ -2,15 +2,16 @@ import express from 'express'
 import { getUserProfile, login, logout, register, updateProfile } from '../controllers/user.controller.js';
 import isAuthenticated from '../middlewares/isAuthenticated.js';
 import upload from '../utils/multer.js';
+import { rateLimit } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
 
 router.route("/register").post(register);
 
 
-router.route("/login").post(login);
+router.route("/login").post(rateLimit,login);
 
-router.route("/login").post(login);
+// router.route("/login").post(login);
 
 router.route("/logout").post(logout)
 
