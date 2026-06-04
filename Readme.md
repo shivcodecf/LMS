@@ -215,10 +215,10 @@ Backend-Focused Software Developer passionate about building scalable web applic
 
 <p align="center">
   <a href="https://github.com/shivcodecf">
-    <img src="https://img.shields.io/badge/GitHub-shivcodecf-181717?logo=github&logoColor=white" />
+    <img src="https://img.shields.io/badge/GitHub-@shivcodecf-181717?logo=github&logoColor=white" />
   </a>
   <a href="https://www.linkedin.com/in/shivam-yadav-620a03232/">
-    <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin&logoColor=white" />
+    <img src="https://img.shields.io/badge/LinkedIn-Shivam%20Yadav-0A66C2?logo=linkedin&logoColor=white" />
   </a>
 </p>
 
