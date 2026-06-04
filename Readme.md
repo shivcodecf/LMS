@@ -157,3 +157,56 @@ This ensures users always receive fresh course data.
 ![alt text](image-2.png)
 ![alt text](image-3.png)
 ![alt text](image-4.png)
+
+-------
+
+## 🔧 Installation
+
+Clone Repository
+
+```
+git clone https://github.com/shivcodecf/LMS.git
+cd LMS
+
+```
+Backend Setup
+
+```
+cd server
+npm install
+npm run dev
+
+```
+Frontend Setup
+
+```
+cd client
+npm install
+npm run dev
+
+```
+
+Environment Variables
+
+```
+API_KEY=
+API_SECRET=
+CLOUD_NAME=
+FRONTEND_URL=
+MONGO_URI=
+PORT=8080=
+SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+WEBHOOK_ENDPOINT_SECRET=
+
+
+```
+
+## 👨‍💻 Author
+
+Shivam Yadav
+
+Backend Developer
+MERN Stack Developer
+Interested in scalable backend systems, caching strategies, and cloud deployment.
