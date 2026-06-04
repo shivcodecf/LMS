@@ -91,3 +91,39 @@ LMS/
 └── README.md
 ```
 
+------------
+
+##Cache Flow
+- Request arrives for all courses.
+- Check Redis cache.
+- If cache exists:
+- Return cached data.
+- If cache miss:
+- Fetch from MongoDB.
+- Store result in Redis.
+- Return response.
+- Cache Invalidation
+
+## The cache is automatically cleared whenever:
+
+- A course is created
+- A course is updated
+- A course is deleted
+- A course is published/unpublished
+
+This ensures users always receive fresh course data.
+
+------------
+
+🔐 RBAC Implementation
+
+## Student
+- Browse courses
+- Purchase courses
+- Access enrolled content
+
+## Instructor
+- Create courses
+- Manage lectures
+- Publish courses
+- View course dashboard
