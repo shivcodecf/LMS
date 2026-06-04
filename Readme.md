@@ -205,7 +205,7 @@ WEBHOOK_ENDPOINT_SECRET=
 
 ## 👨‍💻 Author
 
-Shivam Yadav
+- Shivam Yadav
 
 Backend Developer
 MERN Stack Developer
