@@ -203,10 +203,30 @@ WEBHOOK_ENDPOINT_SECRET=
 
 ```
 
+----
+
 ## 👨‍💻 Author
 
-- Shivam Yadav
+<h3 align="center">Shivam Yadav</h3>
 
-Backend Developer
-MERN Stack Developer
-Interested in scalable backend systems, caching strategies, and cloud deployment.
+<p align="center">
+Backend-Focused Software Developer passionate about building scalable web applications, REST APIs, caching systems, and cloud-based solutions.
+</p>
+
+<p align="center">
+  <a href="https://github.com/your-username">
+    <img src="https://img.shields.io/badge/GitHub-Profile-black?logo=github" />
+  </a>
+  <a href="https://linkedin.com/in/your-profile">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin" />
+  </a>
+</p>
+
+### 💡 Interests
+
+- Backend Development
+- System Design
+- Redis Caching
+- REST API Development
+- Cloud Deployment
+- Performance Optimization
