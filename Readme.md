@@ -49,3 +49,45 @@ A full-stack Learning Management System (LMS) built with the MERN stack, featuri
 | Payments | Stripe |
 | Authentication | JWT, Cookie-based Authentication |
 | Deployment | Vercel, Render, MongoDB Atlas, Redis Cloud |
+
+
+-----------------------------
+## 📂 Project Structure
+
+```text
+LMS/
+├── client/
+│   ├── public/
+│   ├── src/
+│   │   ├── app/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── features/
+│   │   ├── layout/
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   ├── App.jsx
+│   │   ├── DarkMode.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── package.json
+│   └── vite.config.js
+│
+├── server/
+│   ├── controllers/
+│   ├── database/
+│   ├── middlewares/
+│   ├── models/
+│   ├── routes/
+│   ├── upload/
+│   ├── utils/
+│   │   ├── cloudinary.js
+│   │   ├── generateToken.js
+│   │   ├── multer.js
+│   │   └── redis.js
+│   ├── index.js
+│   └── package.json
+│
+└── README.md
+```
+
