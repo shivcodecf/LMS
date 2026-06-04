@@ -49,43 +49,13 @@ Faster course retrieval and improved user experience
 
 --------------------------------------------------------
 
-🛠️ Tech Stack
+## 🛠️ Tech Stack
 
-Frontend
-
-React.js
-Redux Toolkit
-React Router
-Tailwind CSS
-Axios
-RTK Query
-
-
-
-Backend
-
-
-Node.js
-Express.js
-MongoDB
-Mongoose
-
-Caching
-Redis
-
-
-Payments
-Stripe
-
-
-Authentication
-JWT (JSON Web Tokens)
-Cookie-based Authentication
-
-
-Deployment
-Frontend: Vercel
-Backend: Render
-Database: MongoDB Atlas
-Cache: Redis Cloud
-
+| Category | Technologies |
+|-----------|-------------|
+| Frontend | React.js, Redux Toolkit, React Router, Tailwind CSS, Axios, RTK Query |
+| Backend | Node.js, Express.js, MongoDB, Mongoose |
+| Caching | Redis |
+| Payments | Stripe |
+| Authentication | JWT, Cookie-based Authentication |
+| Deployment | Vercel, Render, MongoDB Atlas, Redis Cloud |
