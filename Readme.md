@@ -130,7 +130,7 @@ This ensures users always receive fresh course data.
 
 ------
 
-💳 Stripe Payment Flow
+## 💳 Stripe Payment Flow
 - Student selects a course.
 - Stripe Checkout Session is created.
 - User completes payment securely.
@@ -139,7 +139,7 @@ This ensures users always receive fresh course data.
 
 ------
 
-🌟 Key Highlights
+## 🌟 Key Highlights
 - Full-stack MERN application
 - Role-Based Access Control (RBAC)
 - Instructor Course Management
@@ -151,4 +151,9 @@ This ensures users always receive fresh course data.
 - Production Deployment
 
 ---------
-📸 Screenshots
+## 📸 Screenshots
+![alt text](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
