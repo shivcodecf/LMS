@@ -4,48 +4,38 @@ A full-stack Learning Management System (LMS) built with the MERN stack, featuri
 
 -----
 
-🚀 Features
-Authentication & Authorization
-Secure JWT-based authentication
-Role-Based Access Control (RBAC)
-Student and Instructor roles
-Protected routes and middleware
+## 🚀 Features
 
+### 🔐 Authentication & Authorization
+- Secure JWT-based authentication
+- Role-Based Access Control (RBAC)
+- Student and Instructor roles
+- Protected routes and middleware
 
+### 👨‍🏫 Instructor Features
+- Create, update, and delete courses
+- Upload course thumbnails
+- Add, edit, and delete lectures
+- Publish/unpublish courses
+- Manage course content through a dedicated dashboard
 
-Instructor Features
-Create, update, and delete courses
-Upload course thumbnails
-Add, edit, and delete lectures
-Publish/unpublish courses
-Manage course content from a dedicated dashboard
+### 🎓 Student Features
+- Browse available courses
+- Advanced course filtering and search
+- Purchase courses securely
+- Access enrolled courses
+- Watch course lectures after enrollment
 
+### 💳 Payment Integration
+- Secure course purchases using Stripe
+- Stripe Checkout Session integration
+- Payment verification and enrollment management
 
-
-
-Student Features
-Browse available courses
-Advanced course filtering and search
-Purchase courses securely
-Access enrolled courses
-Watch course lectures after enrollment
-
-
-
-
-
-Payment Integration
-Secure course purchases using Stripe
-Checkout session integration
-Payment verification and enrollment management
-
-
-
-
-Performance Optimization
-Redis caching for course listings
-Reduced database load
-Faster course retrieval and improved user experience
+### ⚡ Performance Optimization
+- Redis caching for course listings
+- Reduced database load
+- Faster course retrieval
+- Improved user experience
 
 --------------------------------------------------------
 
