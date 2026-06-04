@@ -127,3 +127,28 @@ This ensures users always receive fresh course data.
 - Manage lectures
 - Publish courses
 - View course dashboard
+
+------
+
+💳 Stripe Payment Flow
+- Student selects a course.
+- Stripe Checkout Session is created.
+- User completes payment securely.
+- Enrollment is created after successful payment.
+- Purchased course becomes available in the student's dashboard.
+
+------
+
+🌟 Key Highlights
+- Full-stack MERN application
+- Role-Based Access Control (RBAC)
+- Instructor Course Management
+- Stripe Payment Integration
+- Redis Caching for Performance Optimization
+- Advanced Course Filtering
+- JWT Authentication
+- Responsive User Interface
+- Production Deployment
+
+---------
+📸 Screenshots
