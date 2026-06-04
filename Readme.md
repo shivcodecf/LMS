@@ -93,7 +93,7 @@ LMS/
 
 ------------
 
-##Cache Flow
+## Cache Flow
 - Request arrives for all courses.
 - Check Redis cache.
 - If cache exists:
