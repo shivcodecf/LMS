@@ -61,10 +61,10 @@ export const courseApi = createApi({
       providesTags: ["Refetch_Creator_Course"],
     }),
     editCourse: builder.mutation({
-      query: ({ formData, courseId }) => ({
+      query: ({ payload, courseId }) => ({
         url: `${courseId}`,
         method: "PUT",
-        body: formData,
+        body: payload,
       }),
       invalidatesTags: ["Refetch_Creator_Course"],
     }),

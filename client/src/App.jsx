@@ -21,9 +21,14 @@ import EditLecture from "./pages/admin/lecture/EditLecture";
 import CourseDetail from "./pages/student/CourseDetail";
 import CourseProgress from "./pages/student/CourseProgress.jsx"; // Or .js, .tsx, whatever the actual file is.
 import SearchPage from "./pages/student/SearchPage";
-import { AdminRoute, AuthenticatedUser, ProtectedRoute } from "./components/ProtectedRoutes";
+import {
+  AdminRoute,
+  AuthenticatedUser,
+  ProtectedRoute,
+} from "./components/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
- import { ThemeProvider } from "./components/ThemeProvider";
+import { ThemeProvider } from "./components/ThemeProvider";
+import { TrendingCourse } from "./pages/student/TrendingCourse";
 
 const appRouter = createBrowserRouter([
   {
@@ -43,38 +48,85 @@ const appRouter = createBrowserRouter([
       },
 
       {
-        path: "login",
-        element: <AuthenticatedUser><Login /></AuthenticatedUser>,
+        path: "trending-course",
+        element: (
+          <ProtectedRoute>
+            <TrendingCourse />
+          </ProtectedRoute>
+        ),
       },
 
-      
+      // {
+      //   path: "trending-course",
+      //   element: (
+      //     <AuthenticatedUser>
+      //       <TrendingCourse />
+      //     </AuthenticatedUser>
+      //   ),
+      // },
+
+      {
+        path: "login",
+        element: (
+          <AuthenticatedUser>
+            <Login />
+          </AuthenticatedUser>
+        ),
+      },
 
       {
         path: "my-learning",
-        element: <ProtectedRoute><MyLearning /></ProtectedRoute>
+        element: (
+          <ProtectedRoute>
+            <MyLearning />
+          </ProtectedRoute>
+        ),
       },
 
       {
         path: "profile",
-        element:<ProtectedRoute><Profile /></ProtectedRoute> 
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "course/search",
-        element:<ProtectedRoute><SearchPage/></ProtectedRoute>
+        element: (
+          <ProtectedRoute>
+            <SearchPage />
+          </ProtectedRoute>
+        ),
       },
 
       {
         path: "course-detail/:courseId",
-        element:<ProtectedRoute><CourseDetail/></ProtectedRoute> 
+        element: (
+          <ProtectedRoute>
+            <CourseDetail />
+          </ProtectedRoute>
+        ),
       },
-       {
+      {
         path: "course-progress/:courseId",
-        element:<ProtectedRoute><PurchaseCourseProtectedRoute><CourseProgress/></PurchaseCourseProtectedRoute></ProtectedRoute> 
+        element: (
+          <ProtectedRoute>
+            <PurchaseCourseProtectedRoute>
+              <CourseProgress />
+            </PurchaseCourseProtectedRoute>
+          </ProtectedRoute>
+        ),
       },
 
       {
         path: "admin",
-        element:<AdminRoute> <Sidebar /></AdminRoute>,
+        element: (
+          <AdminRoute>
+            {" "}
+            <Sidebar />
+          </AdminRoute>
+        ),
 
         children: [
           {
@@ -108,16 +160,12 @@ const appRouter = createBrowserRouter([
 ]);
 
 function App() {
-  return ( 
-    <main> 
-     
-     {/* <ThemeProvider> */}
+  return (
+    <main>
+      {/* <ThemeProvider> */}
 
       <RouterProvider router={appRouter} />
-     {/* </ThemeProvider> */}
-
-
-    
+      {/* </ThemeProvider> */}
     </main>
   );
 }

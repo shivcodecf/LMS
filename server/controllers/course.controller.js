@@ -29,7 +29,7 @@ export const createCourse = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "failed to create Course",
+      message: error.message,
     });
   }
 };
@@ -108,26 +108,15 @@ export const editCourse = async (req, res) => {
       category,
       courseLevel,
       coursePrice,
+      courseThumbnail,
     } = req.body;
-
-    const thumbnail = req.file;
 
     let course = await Course.findById(courseId);
 
     if (!course) {
       return res.status(404).json({
-        message: "course not found",
+        message: "Course not found",
       });
-    }
-    let courseThumbnail;
-
-    if (thumbnail) {
-      if (course.courseThumbnail) {
-        const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
-        await deleteMediaFromCloudinary(publicId);
-      }
-
-      courseThumbnail = await uploadMedia(thumbnail.path);
     }
 
     const updateData = {
@@ -137,7 +126,7 @@ export const editCourse = async (req, res) => {
       category,
       courseLevel,
       coursePrice,
-      courseThumbnail: courseThumbnail?.secure_url,
+      courseThumbnail: courseThumbnail || course.courseThumbnail,
     };
 
     course = await Course.findByIdAndUpdate(courseId, updateData, {
@@ -149,8 +138,10 @@ export const editCourse = async (req, res) => {
       message: "Course Updated Successfully",
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
-      message: "failed to edit Course",
+      message: error.message,
     });
   }
 };
@@ -166,7 +157,7 @@ export const getCourseById = async (req, res) => {
       });
     }
 
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseId).populate("lectures");
 
     return res.status(200).json({
       course,
@@ -257,10 +248,12 @@ export const editLecture = async (req, res) => {
 
     // Ensure the course still has the lecture id if it was not aleardy added;
     const course = await Course.findById(courseId);
+
     if (course && !course.lectures.includes(lecture._id)) {
       course.lectures.push(lecture._id);
       await course.save();
     }
+
     return res.status(200).json({
       lecture,
       message: "Lecture updated successfully.",
@@ -395,6 +388,47 @@ export const getPublishedCourse = async (_, res) => {
   } catch (error) {
     return res.status(500).json({
       message: error.message,
+    });
+  }
+};
+
+export const getTrendingCourses = async (req, res) => {
+  try {
+    const courses = await Course.aggregate([
+      {
+        $match: {
+          isPublished: true,
+        },
+      },
+      {
+        $addFields: {
+          totalEnrollments: {
+            $size: {
+              $ifNull: ["$enrolledStudents", []],
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          totalEnrollments: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      courses,
+    });
+  } catch (error) {
+    console.log("Trending course error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch message",
     });
   }
 };

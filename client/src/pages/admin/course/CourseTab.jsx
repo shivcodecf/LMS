@@ -29,6 +29,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import EditCourse from "./EditCourse.jsx";
+import axios from "axios";
 const CourseTab = () => {
   const navigate = useNavigate();
 
@@ -104,20 +105,77 @@ const CourseTab = () => {
     }
   };
 
+  // const updateCourseHandler = async () => {
+  //   const formData = new FormData();
+
+  //   formData.append("courseTitle", input.courseTitle);
+  //   formData.append("subTitle", input.subTitle);
+  //   formData.append("description", input.description);
+  //   formData.append("category", input.category);
+  //   formData.append("courseLevel", input.courseLevel);
+  //   formData.append("coursePrice", input.coursePrice);
+  //   formData.append("courseThumbnail", input.courseThumbnail);
+
+  //   await editCourse({ formData, courseId });
+
+  //   console.log(input);
+  // };
+
   const updateCourseHandler = async () => {
-    const formData = new FormData();
+    let thumbnailUrl = input.courseThumbnail;
 
-    formData.append("courseTitle", input.courseTitle);
-    formData.append("subTitle", input.subTitle);
-    formData.append("description", input.description);
-    formData.append("category", input.category);
-    formData.append("courseLevel", input.courseLevel);
-    formData.append("coursePrice", input.coursePrice);
-    formData.append("courseThumbnail", input.courseThumbnail);
+    // if thumbnail is a new File object, upload to S3 first
+    let signedRes;
 
-    await editCourse({ formData, courseId });
+    if (input.courseThumbnail instanceof File) {
+      // Step 1: get signed URL
+      try {
+        signedRes = await axios.post(
+          `http://localhost:8080/api/v1/course/generate-upload-url`,
+          {
+            fileName: input.courseThumbnail.name,
+            fileType: input.courseThumbnail.type,
+          },
+          { withCredentials: true },
+        );
 
-    console.log(input);
+        console.log(signedRes.data);
+      } catch (error) {
+        console.log("FULL ERROR:", error);
+        console.log("response:", error.response);
+      }
+
+      const { signedUrl, fileUrl } = signedRes.data;
+
+      thumbnailUrl = fileUrl;
+
+      // Step 2: upload directly to S3
+      const uploadRes = await fetch(signedUrl, {
+        method: "PUT",
+        body: input.courseThumbnail,
+        headers: {
+          "Content-Type": input.courseThumbnail.type,
+        },
+      });
+
+      console.log("status:", uploadRes.status);
+      console.log("ok:", uploadRes.ok);
+
+      // Step 3: send only JSON to backend
+      const payload = {
+        courseTitle: input.courseTitle,
+        subTitle: input.subTitle,
+        description: input.description,
+        category: input.category,
+        courseLevel: input.courseLevel,
+        coursePrice: input.coursePrice,
+        courseThumbnail: thumbnailUrl,
+      };
+
+      await editCourse({ payload, courseId });
+
+      console.log(payload);
+    }
   };
 
   useEffect(() => {
@@ -146,8 +204,8 @@ const CourseTab = () => {
     return <Loader2 className="h-4 w-4 animate-spin" />;
 
   return (
-    <div className=""> 
-     {/* <EditCourse/> */}
+    <div className="">
+      {/* <EditCourse/> */}
       <Card>
         <CardHeader className="flex flex-row justify-between">
           <div>
@@ -162,7 +220,7 @@ const CourseTab = () => {
               disabled={GetCourseByIdData?.course?.lectures?.length === 0}
               onClick={() =>
                 coursePublisheHandler(
-                  GetCourseByIdData?.course?.isPublished ? "false" : "true"
+                  GetCourseByIdData?.course?.isPublished ? "false" : "true",
                 )
               }
             >

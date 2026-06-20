@@ -21,10 +21,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-const MEDIA_API = "http://localhost:8080/api/v1/media";
-
 const LectureTab = () => {
- 
   const [lectureTitle, setLectureTitle] = useState("");
   const [uploadVideoInfo, setUploadVideoInfo] = useState(null);
   const [isFree, setIsFree] = useState(false);
@@ -36,32 +33,55 @@ const LectureTab = () => {
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      setMediaProgress(true);
-      try {
-        const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
-          onUploadProgress: ({ loaded, total }) => {
-            setUploadProgress(Math.round((loaded * 100) / total));
-          },
-        });
+    if (!file) return;
 
-        if (res.data.success) {
-          console.log(res);
-          setUploadVideoInfo({
-            videoUrl: res.data.data.url,
-            publicId: res.data.data.public_id,
-          });
-          setBtnDisable(false);
-          toast.success(res.data.message);
+    try {
+      setMediaProgress(true);
+      setBtnDisable(true);
+      setUploadProgress(0);
+
+      // Step 1: Get signed URL
+      const signedRes = await axios.post(
+        "http://localhost:8080/api/v1/course/generate-upload-url",
+        {
+          fileName: file.name,
+          fileType: file.type,
+          folder: "lectures",
+        },
+        {
+          withCredentials: true,
         }
-      } catch (error) {
-        console.log(error);
-        toast.error("video upload failed");
-      } finally {
-        setMediaProgress(false);
-      }
+      );
+
+      const { signedUrl, fileUrl } = signedRes.data;
+
+      // Step 2: Upload directly to S3
+      const uploadRes = await axios.put(signedUrl, file, {
+        headers: {
+          "Content-Type": file.type,
+        },
+        onUploadProgress: ({ loaded, total }) => {
+          if (total) {
+            const progress = Math.round((loaded * 100) / total);
+            setUploadProgress(progress);
+          }
+        },
+      });
+
+      console.log("Upload status:", uploadRes.status);
+
+      // Step 3: Save URL in state
+      setUploadVideoInfo({
+        videoUrl: fileUrl,
+      });
+
+      setBtnDisable(false);
+      toast.success("Video uploaded successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Video upload failed");
+    } finally {
+      setMediaProgress(false);
     }
   };
 
@@ -75,13 +95,19 @@ const LectureTab = () => {
     },
   ] = useRemoveLectureMutation();
 
-  const [editLecture, { data, isSuccess, error, isLoading, fetch }] =
+  const [editLecture, { data, isSuccess, error, isLoading }] =
     useEditLectureMutation();
 
   const { data: getLectureByIdData } = useGetLectureByIdQuery(lectureId);
 
   const editLectureHandler = async () => {
-    console.log({ lectureTitle, uploadVideoInfo, isFree, courseId, lectureId });
+    console.log({
+      lectureTitle,
+      uploadVideoInfo,
+      isFree,
+      courseId,
+      lectureId,
+    });
 
     await editLecture({
       courseId,
@@ -92,47 +118,35 @@ const LectureTab = () => {
     });
   };
 
-  
-
   const removeLectureHandler = async () => {
     await removeLecture(lectureId);
   };
 
   useEffect(() => {
-    console.log(getLectureByIdData);
-      setLectureTitle(getLectureByIdData?.lecture?.lectureTitle)
-      setIsFree(getLectureByIdData?.lecture?.isPreviewFree)
+    setLectureTitle(getLectureByIdData?.lecture?.lectureTitle || "");
+    setIsFree(getLectureByIdData?.lecture?.isPreviewFree || false);
   }, [getLectureByIdData?.lecture]);
 
   useEffect(() => {
-    if (isSuccess) {
-      toast.success(data?.message);
-    }
-
-    if (error) {
-      toast.error(error?.message?.message);
-    }
+    if (isSuccess) toast.success(data?.message);
+    if (error) toast.error(error?.message?.message);
   }, [error, isSuccess]);
 
   useEffect(() => {
-    if (removeisSuccess) {
-      toast.success(removeData?.message);
-    }
-
-    if (removeisError) {
-      toast.error(removeisError?.message?.message);
-    }
-  }, [error, removeisSuccess, removeisError]);
+    if (removeisSuccess) toast.success(removeData?.message);
+    if (removeisError) toast.error(removeisError?.message?.message);
+  }, [removeisSuccess, removeisError]);
 
   return (
     <Card className="border-none">
-      <CardHeader clasName="flex justify-between">
+      <CardHeader>
         <div>
           <CardTitle>Edit Lecture</CardTitle>
           <CardDescription>
             Make changes and click save when done
           </CardDescription>
         </div>
+
         <div className="flex items-center gap-2">
           <Button
             variant="destructive"
@@ -151,17 +165,18 @@ const LectureTab = () => {
           </Button>
         </div>
       </CardHeader>
+
       <CardContent>
-        <div className="">
+        <div>
           <Label>Title</Label>
           <Input
             type="text"
-            placeholder="Intro. to javascript"
             value={lectureTitle}
             onChange={(e) => setLectureTitle(e.target.value)}
             className="border-none"
           />
         </div>
+
         <div className="my-5">
           <Label>
             Video <span className="text-red-500">*</span>
@@ -170,47 +185,33 @@ const LectureTab = () => {
             type="file"
             accept="video/*"
             onChange={fileChangeHandler}
-            placeholder="Intro. to javascript"
             className="border-none w-fit"
           />
         </div>
+
         <div className="flex items-center space-x-2 my-5">
-          <Switch
-            id="airplane-mode"
-            checked={isFree}
-            onCheckedChange={setIsFree}
-            className={`
-          relative inline-flex h-6 w-11 cursor-pointer rounded-full transition-colors duration-200
-          ${isFree ? "bg-green-600" : "bg-zinc-600"}
-          before:absolute before:top-0.5 before:left-0.5 before:h-5 before:w-5
-          before:rounded-full before:bg-white before:shadow
-          before:transform before:transition-transform before:duration-200
-          ${isFree ? "before:translate-x-5" : "before:translate-x-0"}
-        `}
-          />
-          <Label
-            htmlFor="airplane-mode"
-            className="text-sm font-medium text-gray-900 dark:text-gray-100"
-          >
-            Is this video free
-          </Label>
+          <input
+  type="checkbox"
+  checked={isFree}
+  onChange={(e) => setIsFree(e.target.checked)}
+/>
+          <Label>Is this video free</Label>
         </div>
 
         {mediaProgress && (
           <div className="my-4 space-y-2">
-            <Progress
-              value={uploadProgress}
-              className="h-4 bg-zinc-200 rounded"
-              indicatorClassName="bg-red-600 rounded"
-            />
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              {uploadProgress}% uploaded
-            </p>
+            <Progress value={uploadProgress} className="h-4 rounded" />
+            <p>{uploadProgress}% uploaded</p>
           </div>
         )}
+
         <div className="mt-2">
-          <Button className="bg-black text-white" onClick={editLectureHandler}>
-            Update lecture
+          <Button
+            className="bg-black text-white"
+            onClick={editLectureHandler}
+            disabled={btnDisable || mediaProgress || isLoading}
+          >
+            {mediaProgress ? "Uploading..." : "Update Lecture"}
           </Button>
         </div>
       </CardContent>

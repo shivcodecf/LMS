@@ -11,22 +11,35 @@ import {
   getCreatorCourses,
   getLectureById,
   getPublishedCourse,
+  getTrendingCourses,
   removeLecture,
   searchCourse,
   togglePublishCourse,
 } from "../controllers/course.controller.js";
 import upload from "../utils/multer.js";
+import { generateUploadUrl } from "../controllers/upload.controller.js";
 
 const router = express.Router();
 
 router.route("/").post(isAuthenticated, createCourse);
 router.route("/search").get(isAuthenticated, searchCourse);
 
-router.route("/published-courses").get( getPublishedCourse);
+router.route("/published-courses").get(getPublishedCourse);
 router.route("/").get(isAuthenticated, getCreatorCourses);
+
 router
   .route("/:courseId")
-  .put(isAuthenticated, upload.single("courseThumbnail"), editCourse);
+  .put(isAuthenticated,  editCourse);
+
+
+router.post(
+  "/generate-upload-url",
+  isAuthenticated,
+  generateUploadUrl,
+);
+
+router.route("/getTopCourse").get(isAuthenticated,getTrendingCourses)
+
 
 router.route("/:courseId").get(isAuthenticated, getCourseById);
 
@@ -39,7 +52,10 @@ router
 router.route("/lecture/:lectureId").get(isAuthenticated, getLectureById);
 router.route("/lecture/:lectureId").delete(isAuthenticated, removeLecture);
 
+
+
 router.route("/:courseId").patch(isAuthenticated, togglePublishCourse);
+
 
 
 export default router;

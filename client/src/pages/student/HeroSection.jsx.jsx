@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { nav } from "framer-motion/m";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -62,12 +63,13 @@ const HeroSection = () => {
             Explore Courses
           </Button>
 
-          <Button
+          <Button onClick={()=>navigate("/trending-course")}
             variant="outline"
             className="border-white text-white px-6 py-3 rounded-xl hover:bg-white hover:text-black transition"
           >
             View Trending 🔥
           </Button>
+
         </div>
       </div>
     </div>
