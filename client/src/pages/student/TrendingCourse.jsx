@@ -10,7 +10,7 @@ export const TrendingCourse = () => {
   useEffect(() => {
     const fetchTrendingCourse = async () => {
       const response = await axios.get(
-        "http://localhost:8080/api/v1/course/getTopCourse",
+        "http://52.63.40.222/api/v1/course/getTopCourse",
         {
           withCredentials: true,
         },

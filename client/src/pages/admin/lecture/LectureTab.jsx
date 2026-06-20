@@ -42,7 +42,7 @@ const LectureTab = () => {
 
       // Step 1: Get signed URL
       const signedRes = await axios.post(
-        "http://localhost:8080/api/v1/course/generate-upload-url",
+        "http://52.63.40.222/api/v1/course/generate-upload-url",
         {
           fileName: file.name,
           fileType: file.type,

@@ -131,7 +131,7 @@ const CourseTab = () => {
       // Step 1: get signed URL
       try {
         signedRes = await axios.post(
-          `http://localhost:8080/api/v1/course/generate-upload-url`,
+          `http://52.63.40.222/api/v1/course/generate-upload-url`,
           {
             fileName: input.courseThumbnail.name,
             fileType: input.courseThumbnail.type,
