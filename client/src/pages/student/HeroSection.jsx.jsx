@@ -61,15 +61,23 @@ const HeroSection = () => {
           >
             Explore Courses
           </Button>
-
-          <Button
-            onClick={() => {
-              console.log("Trending clicked");
-              navigate("/trending-course");
-            }}
-          >
-            View Trending 🔥
-          </Button>
+<Button
+  onClick={() => navigate("/trending-course")}
+  className="
+    bg-white/10 backdrop-blur-md
+    border border-white/20
+    text-white
+    font-semibold
+    px-5 py-2
+    
+    rounded-xl
+    hover:bg-white hover:text-black
+    transition-all duration-300
+    shadow-lg
+  "
+>
+  🔥 View Trending
+</Button>
         </div>
       </div>
     </div>
