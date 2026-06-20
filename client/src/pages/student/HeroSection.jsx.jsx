@@ -18,14 +18,12 @@ const HeroSection = () => {
 
   return (
     <div className="relative min-h-[90vh] flex items-center justify-center px-4 overflow-hidden bg-gradient-to-br from-black via-gray-900 to-indigo-900">
-
       {/* 🔥 Background glow */}
       <div className="absolute w-[500px] h-[500px] bg-purple-500 opacity-30 blur-[120px] rounded-full top-[-100px] left-[-100px]" />
       <div className="absolute w-[400px] h-[400px] bg-blue-500 opacity-30 blur-[100px] rounded-full bottom-[-100px] right-[-100px]" />
 
       {/* 💎 Content */}
       <div className="relative z-10 max-w-4xl w-full text-center">
-
         {/* Heading */}
         <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
           Learn Smarter, <span className="text-blue-400">Grow Faster 🚀</span>
@@ -33,7 +31,8 @@ const HeroSection = () => {
 
         {/* Subtext */}
         <p className="text-gray-300 text-lg md:text-xl mb-10">
-          Find top-rated courses and upgrade your skills with the best learning experience.
+          Find top-rated courses and upgrade your skills with the best learning
+          experience.
         </p>
 
         {/* 🔍 Search Box */}
@@ -63,13 +62,14 @@ const HeroSection = () => {
             Explore Courses
           </Button>
 
-          <Button onClick={()=>navigate("/trending-course")}
-            variant="outline"
-            className="border-white text-white px-6 py-3 rounded-xl hover:bg-white hover:text-black transition"
+          <Button
+            onClick={() => {
+              console.log("Trending clicked");
+              navigate("/trending-course");
+            }}
           >
             View Trending 🔥
           </Button>
-
         </div>
       </div>
     </div>
