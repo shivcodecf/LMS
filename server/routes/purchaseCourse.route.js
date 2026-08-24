@@ -11,7 +11,7 @@ const router = express.Router();
 
 router
   .route("/checkout/create-checkout-session")
-  .post(isAuthenticated,createCheckoutSession);
+  .post(isAuthenticated, createCheckoutSession);
 
 router
   .route("/webhook")
@@ -20,11 +20,8 @@ router
 // Placeholder handlers so routes don’t crash
 router
   .route("/course/:courseId/detail-with-status")
-  .get(isAuthenticated,getCourseDetailWithPurchaseStatus)
-   
+  .get(isAuthenticated, getCourseDetailWithPurchaseStatus);
 
-router
-  .route("/")
-  .get(isAuthenticated,getAllPurchasedCourse);
+router.route("/").get(isAuthenticated, getAllPurchasedCourse);
 
 export default router;

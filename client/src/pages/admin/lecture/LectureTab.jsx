@@ -50,7 +50,7 @@ const LectureTab = () => {
         },
         {
           withCredentials: true,
-        }
+        },
       );
 
       const { signedUrl, fileUrl } = signedRes.data;
@@ -191,10 +191,10 @@ const LectureTab = () => {
 
         <div className="flex items-center space-x-2 my-5">
           <input
-  type="checkbox"
-  checked={isFree}
-  onChange={(e) => setIsFree(e.target.checked)}
-/>
+            type="checkbox"
+            checked={isFree}
+            onChange={(e) => setIsFree(e.target.checked)}
+          />
           <Label>Is this video free</Label>
         </div>
 

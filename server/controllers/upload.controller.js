@@ -9,18 +9,9 @@ const s3 = new S3Client({
   },
 });
 
-
-
-
-
-
 export const generateUploadUrl = async (req, res) => {
   try {
-    const {
-      fileName,
-      fileType,
-      folder = "course-thumbnails",
-    } = req.body;
+    const { fileName, fileType, folder = "course-thumbnails" } = req.body;
 
     if (!fileName || !fileType) {
       return res.status(400).json({
